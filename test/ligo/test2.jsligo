@@ -6,8 +6,9 @@ let assert_string_failure = ([res,expected] : [test_exec_result, string]) : unit
   match (res, {
     Fail: (x: test_exec_error) => (
       match (x, {
-        Rejected: (x:[michelson_code,address]) => assert (Test.michelson_equal (x[0], expected_)),
-        Other: (_:unit) => failwith ("contract failed for an unknown reason")
+        Rejected: (x: [michelson_code,address]) => assert (Test.michelson_equal (x[0], expected_)),
+        Balance_too_low : (x : { contract_too_low : address , contract_balance : tez , spend_request : tez }) =>  failwith("contract failed: balance too low"),
+        Other: (s: string) => failwith(s)
       })),
     Success: (_:unit) => failwith ("bad price check")
   } );
