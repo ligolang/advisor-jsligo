@@ -5,7 +5,8 @@ export namespace Types {
     export type t = {
         indiceAddress : address,
         algorithm : Algo.Types.t,
-        result : bool
+        result : bool,
+        metadata: big_map<string, bytes>
     };
 };
 

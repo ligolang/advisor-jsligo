@@ -43,7 +43,12 @@ const _test = () : unit => {
 
   // deploy ADVISOR contract 
   _ = Test.log("deploy ADVISOR smart contract");
-  const advisor_initial_storage : ADVISOR.storage = {indiceAddress:address_indice, algorithm:((i : int) => { if (i < 10) { return true } else { return false } }), result: false};
+  const advisor_initial_storage : ADVISOR.storage = {
+    indiceAddress:address_indice,
+    algorithm:((i : int) => { if (i < 10) { return true } else { return false } }),
+    result: false,
+    metadata: (Big_map.empty as big_map<string, bytes>)
+  };
   const transpile_advisor_func = (x:ADVISOR.storage) : ADVISOR.storage => { return x };
   const ais = Test.run (transpile_advisor_func, advisor_initial_storage);
   const advisor_contract_path = "contracts/advisor/main.jsligo"; //"views_hangzhou/jsligo/advisor.jsligo";
