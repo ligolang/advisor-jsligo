@@ -1,4 +1,4 @@
-ligo_compiler=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:next
+ligo_compiler=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:0.41.0
 PROTOCOL_OPT=--protocol ithaca
 JSON_OPT=--michelson-format json
 
@@ -25,18 +25,22 @@ indice: indice.tz indice.json
 advisor: advisor.tz advisor.json
 
 indice.tz: contracts/indice/main.jsligo
+	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson"
 	@$(ligo_compiler) compile contract $^ -e indiceMain $(PROTOCOL_OPT) > compiled/$@
 
 indice.json: contracts/indice/main.jsligo
+	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson in JSON format"
 	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e indiceMain $(PROTOCOL_OPT) > compiled/$@
 
 advisor.tz: contracts/advisor/main.jsligo
+	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson"
 	@$(ligo_compiler) compile contract $^ -e advisorMain $(PROTOCOL_OPT) > compiled/$@
 
 advisor.json: contracts/advisor/main.jsligo
+	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson in JSON format"
 	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e advisorMain $(PROTOCOL_OPT) > compiled/$@
 
