@@ -10,9 +10,9 @@ The `indice` contract represents a fund value and the `advisor` contract gives a
 
 ### Transaction workflow
 
-Since Hangzhou protocol, on-chain views have been introduced which replace the callback pattern to retrieve a storage of another contract.
+Since Hangzhou protocol, on-chain views have been introduced which replace the callback pattern to retrieve information from the storage of another contract.
 
-The `advisor` contract can be invoked to request the fund value from the `indice` contract (via an on-chain view). The `indice` contract receives the view request and sends back the requested value. When `advisor` contract receives the fund value it can apply the "algorithm" to check it is worth investing ! This algorithm relies on a single indice value.
+The `executeAlgorithm` entrypoint of the `advisor` contract requests the fund value from the `indice` contract (via an on-chain view). The storage of the `indice` contract is retrieved with a `Tezos.call_view` instruction inside the entrypoint of the `advisor` contract which can apply the "algorithm" to check if it is worth investing ! This algorithm relies on a single indice value.
 
 ![](indice&advisor.png)
 
@@ -27,9 +27,7 @@ So an entrypoint `ChangeAlgorithm` is provided to modify the algorithm that comp
 
 ## Content
 
-This directory illustrates the new on-chain views style and contains 2 implementations:
-- cameligo: for smart contracts implementation in cameligo and `ligo` command lines for simulating all entrypoints
-- jsligo: for smart contracts implementation in JSligo and `ligo` command lines for simulating all entrypoints
+This repository illustrates the new on-chain views style and contains a jsligo implementations for smart contracts and `ligo` command lines for simulating all entrypoints.
 
 
 ## Pre-requisites
