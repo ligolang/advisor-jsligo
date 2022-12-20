@@ -1,4 +1,4 @@
-ligo_compiler?=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:0.41.0
+ligo_compiler?=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:0.57.0
 PROTOCOL_OPT?=
 JSON_OPT=--michelson-format json
 
@@ -24,22 +24,22 @@ indice: indice.tz indice.json
 
 advisor: advisor.tz advisor.json
 
-indice.tz: contracts/indice/main.jsligo
+indice.tz: src/indice/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson"
 	@$(ligo_compiler) compile contract $^ -e indiceMain $(PROTOCOL_OPT) > compiled/$@
 
-indice.json: contracts/indice/main.jsligo
+indice.json: src/indice/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson in JSON format"
 	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e indiceMain $(PROTOCOL_OPT) > compiled/$@
 
-advisor.tz: contracts/advisor/main.jsligo
+advisor.tz: src/advisor/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson"
 	@$(ligo_compiler) compile contract $^ -e advisorMain $(PROTOCOL_OPT) > compiled/$@
 
-advisor.json: contracts/advisor/main.jsligo
+advisor.json: src/advisor/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson in JSON format"
 	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e advisorMain $(PROTOCOL_OPT) > compiled/$@
@@ -59,26 +59,27 @@ test_ligo_2: test/ligo/test2.jsligo
 	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
 deploy: node_modules deploy.js
-	@echo "Deploying contracts"
-	@node deploy/deploy.js
 
-deploy.js: 
-	@cd deploy && tsc deploy.ts --resolveJsonModule -esModuleInterop
+deploy.js:
+	@if [ ! -f ./deploy/metadata.json ]; then cp deploy/metadata.json.dist deploy/metadata.json ; fi
+	@echo "Running deploy script\n"
+	@cd deploy && npm start
 
 node_modules:
-	@echo "Install node modules"
+	@echo "Installing deploy script dependencies"
 	@cd deploy && npm install
+	@echo ""
 
 dry-run: dry-run_indice dry-run_advisor
 
-dry-run_advisor: contracts/advisor/main.jsligo
+dry-run_advisor: src/advisor/main.jsligo
 #	@echo $(simulateline)
 	$(ligo_compiler) compile parameter $^ 'ExecuteAlgorithm(unit)' -e advisorMain $(PROTOCOL_OPT)
 	$(ligo_compiler) compile parameter $^ 'ChangeAlgorithm((i : int) : bool => { return false })' -e advisorMain $(PROTOCOL_OPT)
 	$(ligo_compiler) run dry-run $^  'ExecuteAlgorithm(unit)' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT) 
 	$(ligo_compiler) run dry-run $^  'ChangeAlgorithm((i : int) : bool => { return false })' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT)
 
-dry-run_indice: contracts/indice/main.jsligo
+dry-run_indice: src/indice/main.jsligo
 	$(ligo_compiler) compile parameter $^ 'Increment(5)' -e indiceMain $(PROTOCOL_OPT)
 	$(ligo_compiler) compile parameter $^ 'Decrement(5)' -e indiceMain $(PROTOCOL_OPT)
 	$(ligo_compiler) run dry-run $^  'Increment(5)' '37' -e indiceMain $(PROTOCOL_OPT)
