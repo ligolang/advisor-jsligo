@@ -64,6 +64,7 @@ if (!rpcUrl) {
 
 const Tezos = new TezosToolkit(rpcUrl);
 const signer = new InMemorySigner(pk);
+
 Tezos.setProvider({ signer: signer });
 
 let indice_address = process.env.INDICE_CONTRACT_ADDRESS || undefined;
