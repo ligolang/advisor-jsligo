@@ -4,15 +4,15 @@ export type indiceEntrypoints = ["Increment", int] | ["Decrement", int];
 
 export type indiceFullReturn = [list<operation>, indiceStorage];
 
-export const increment = ([param, store] : [int, indiceStorage]) : indiceFullReturn => {
+export const increment = (param: int, store: indiceStorage) : indiceFullReturn => {
     return [list([]) as list<operation>, store + param]
 };
 
-export const decrement = ([param, store] : [int, indiceStorage]) : indiceFullReturn => {
+export const decrement = (param: int, store: indiceStorage) : indiceFullReturn => {
     return [list([]) as list<operation>, store - param]
 };
 
-const indiceMain = ([ep, store] : [indiceEntrypoints, indiceStorage]) : indiceFullReturn => {
+const indiceMain = (ep: indiceEntrypoints, store: indiceStorage) : indiceFullReturn => {
     return match (ep, { 
         Increment: (p: int) => increment(p, store),
         Decrement: (p: int) => decrement(p, store)
