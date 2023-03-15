@@ -11,11 +11,11 @@ export type parameter = Parameter.t;
 export type return_ = [list<operation>, storage];
 
 
-export const increment = ([param, store] : [int, storage]) : return_ => {
+export const increment = (param: int, store: storage) : return_ => {
     return [list([]) as list<operation>, store + param]
 };
 
-export const decrement = ([param, store] : [int, storage]) : return_ => {
+export const decrement = (param: int, store: storage) : return_ => {
     return [list([]) as list<operation>, store - param]
 };
 
