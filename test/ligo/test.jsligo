@@ -45,23 +45,30 @@ const _test = () : unit => {
 
   // ADVISOR call ExecuteAlgorithm
   Test.log("call ExecuteAlgorithm entrypoint of ADVISOR smart contract");
-  let _s = Test.transfer_to_contract_exn(advisor_contract, (ExecuteAlgorithm(unit)), (0 as mutez));
-  const advisor_modified_storage = Test.get_storage(advisor_taddress);
-  Test.log(advisor_modified_storage);
-  assert(advisor_modified_storage.result == true);
+  {
+    let _s = Test.transfer_to_contract_exn(advisor_contract, (ExecuteAlgorithm(unit)), (0 as mutez));
+    const advisor_modified_storage = Test.get_storage(advisor_taddress);
+    Test.log(advisor_modified_storage);
+    assert(advisor_modified_storage.result == true);
+  };
 
   // ADVISOR call ChangeAlgorithm
   Test.log("call ChangeAlgorithm entrypoint of ADVISOR smart contract");
-  const new_algo  = (i : int) : bool => { if (i < 3) { return true } else { return false } };
-  let _s = Test.transfer_to_contract_exn(advisor_contract, (ChangeAlgorithm(new_algo)), (0 as mutez));
-  const _advisor_modified_storage2 = Test.get_storage(advisor_taddress);
+  {
+    const new_algo  = (i : int) : bool => { if (i < 3) { return true } else { return false } };
+    let _s = Test.transfer_to_contract_exn(advisor_contract, (ChangeAlgorithm(new_algo)), (0 as mutez));
+    const _advisor_modified_storage2 = Test.get_storage(advisor_taddress);
+  };
 
   // ADVISOR call ExecuteAlgorithm
   Test.log("call ExecuteAlgorithm entrypoint of ADVISOR smart contract");
+  {
   let _s = Test.transfer_to_contract_exn(advisor_contract, (ExecuteAlgorithm(unit)), (0 as mutez));
   const advisor_modified_storage3 = Test.get_storage(advisor_taddress);
   Test.log(advisor_modified_storage3);
   assert(advisor_modified_storage3.result == false);
+  };
+  
   return unit
 };
 
