@@ -6,14 +6,14 @@ const assert_string_failure = (res: test_exec_result, expected: string) : unit =
   match (res, {
     Fail: (x: test_exec_error) => (
       match (x, {
-        Rejected: (x: [michelson_code,address]) =>
+        Rejected: (x: [michelson_program,address]) =>
           assert (Test.michelson_equal (x[0], expected_)),
         Balance_too_low : _ =>  
           failwith("contract failed: balance too low"),
         Other: (s: string) => 
           failwith(s)
       })),
-    Success: (_:unit) => failwith ("bad price check")
+    Success: (_) => failwith ("bad price check")
   } );
 } ;
 
