@@ -11,11 +11,11 @@ export namespace Types {
 };
 
 export namespace Utils {
-    const change = (p: Algo.Types.t, s: Types.t) : Types.t => {
+    export const change = (p: Algo.Types.t, s: Types.t) : Types.t => {
         return { ...s, algorithm: p}
     };
 
-    const executeAlgorithm = (s : Types.t) : Types.t => {
+    export const executeAlgorithm = (s : Types.t) : Types.t => {
         let indiceValOpt : option<int> = Tezos.call_view("indice_value", unit, s.indiceAddress);
         let indiceVal : int = match (indiceValOpt , {
             None: () => (failwith(Errors.unknownView) as int),
