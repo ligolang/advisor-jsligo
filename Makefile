@@ -27,12 +27,12 @@ advisor: advisor.tz advisor.json
 indice.tz: src/indice/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson"
-	@$(ligo_compiler) compile contract $^ -e indiceMain $(PROTOCOL_OPT) > compiled/$@
+	@$(ligo_compiler) compile contract $^  $(PROTOCOL_OPT) > compiled/$@
 
 indice.json: src/indice/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Indice smart contract to Michelson in JSON format"
-	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e indiceMain $(PROTOCOL_OPT) > compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT)  $(PROTOCOL_OPT) > compiled/$@
 
 advisor.tz: src/advisor/main.jsligo
 	@mkdir -p compiled
@@ -54,7 +54,7 @@ test_ligo: test/ligo/test.jsligo
 	@echo "Running integration tests"
 	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
-test_ligo_2: test/ligo/test2.jsligo 
+test_ligo_2: test/ligo/test2.jsligo
 	@echo "Running integration tests (fail)"
 	@$(ligo_compiler) run test $^ $(PROTOCOL_OPT)
 
@@ -76,11 +76,11 @@ dry-run_advisor: src/advisor/main.jsligo
 #	@echo $(simulateline)
 	$(ligo_compiler) compile parameter $^ 'ExecuteAlgorithm(unit)' -e advisorMain $(PROTOCOL_OPT)
 	$(ligo_compiler) compile parameter $^ 'ChangeAlgorithm((i : int) : bool => { return false })' -e advisorMain $(PROTOCOL_OPT)
-	$(ligo_compiler) run dry-run $^  'ExecuteAlgorithm(unit)' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT) 
+	$(ligo_compiler) run dry-run $^  'ExecuteAlgorithm(unit)' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT)
 	$(ligo_compiler) run dry-run $^  'ChangeAlgorithm((i : int) : bool => { return false })' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT)
 
 dry-run_indice: src/indice/main.jsligo
-	$(ligo_compiler) compile parameter $^ 'Increment(5)' -e indiceMain $(PROTOCOL_OPT)
-	$(ligo_compiler) compile parameter $^ 'Decrement(5)' -e indiceMain $(PROTOCOL_OPT)
-	$(ligo_compiler) run dry-run $^  'Increment(5)' '37' -e indiceMain $(PROTOCOL_OPT)
-	$(ligo_compiler) run dry-run $^  'Decrement(5)' '37' -e indiceMain $(PROTOCOL_OPT)
+	$(ligo_compiler) compile parameter $^ 'Increment(5)'  $(PROTOCOL_OPT)
+	$(ligo_compiler) compile parameter $^ 'Decrement(5)'  $(PROTOCOL_OPT)
+	$(ligo_compiler) run dry-run $^  'Increment(5)' '37'  $(PROTOCOL_OPT)
+	$(ligo_compiler) run dry-run $^  'Decrement(5)' '37'  $(PROTOCOL_OPT)
