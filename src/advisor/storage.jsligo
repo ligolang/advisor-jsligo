@@ -17,10 +17,10 @@ export namespace Utils {
 
     export const executeAlgorithm = (s : Types.t) : Types.t => {
         let indiceValOpt : option<int> = Tezos.call_view("indice_value", unit, s.indiceAddress);
-        let indiceVal : int = match (indiceValOpt , {
-            None: () => (failwith(Errors.unknownView) as int),
-            Some: (v: int) => v
-        });
+        let indiceVal : int = match (indiceValOpt) {
+            when(None()) : (failwith(Errors.unknownView));
+            when(Some(v)) : v
+        };
         return { ...s, result: s.algorithm(indiceVal) }
     };
 };

@@ -19,11 +19,12 @@ export const decrement = (param: int, store: storage) : return_ => {
     return [list([]) as list<operation>, store - param]
 };
 
-const indiceMain = ([ep, store] : [parameter, storage]) : return_ => {
-    return match (ep, { 
-        Increment: (p: int) => increment(p, store),
-        Decrement: (p: int) => decrement(p, store)
-    });
+@entry
+const indiceMain = (ep : parameter, store : storage) : return_ => {
+    return match (ep) {
+        when (Increment (p)): increment(p, store);
+        when (Decrement (p)): decrement(p, store)
+    };
 };
 
 // @view 
