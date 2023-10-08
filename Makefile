@@ -1,4 +1,4 @@
-ligo_compiler?=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:0.57.0
+ligo_compiler?=docker run --rm -v "$$PWD":"$$PWD" -w "$$PWD" ligolang/ligo:stable
 PROTOCOL_OPT?=
 JSON_OPT=--michelson-format json
 
@@ -37,12 +37,12 @@ indice.json: src/indice/main.jsligo
 advisor.tz: src/advisor/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson"
-	@$(ligo_compiler) compile contract $^ -e advisorMain $(PROTOCOL_OPT) > compiled/$@
+	@$(ligo_compiler) compile contract $^ $(PROTOCOL_OPT) > compiled/$@
 
 advisor.json: src/advisor/main.jsligo
 	@mkdir -p compiled
 	@echo "Compiling Advisor smart contract to Michelson in JSON format"
-	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e advisorMain $(PROTOCOL_OPT) > compiled/$@
+	@$(ligo_compiler) compile contract $^ $(JSON_OPT) $(PROTOCOL_OPT) > compiled/$@
 
 clean:
 	@echo "Removing Michelson files"
@@ -80,7 +80,7 @@ dry-run_advisor: src/advisor/main.jsligo
 	$(ligo_compiler) run dry-run $^  'ChangeAlgorithm((i : int) : bool => { return false })' '{indiceAddress: ("KT1D99kSAsGuLNmT1CAZWx51vgvJpzSQuoZn" as address), algorithm: (i : int) : bool => { if (i < 10) { return true } else { return false } }, result: false}' -e advisorMain $(PROTOCOL_OPT)
 
 dry-run_indice: src/indice/main.jsligo
-	$(ligo_compiler) compile parameter $^ 'Increment(5)'  $(PROTOCOL_OPT)
-	$(ligo_compiler) compile parameter $^ 'Decrement(5)'  $(PROTOCOL_OPT)
-	$(ligo_compiler) run dry-run $^  'Increment(5)' '37'  $(PROTOCOL_OPT)
-	$(ligo_compiler) run dry-run $^  'Decrement(5)' '37'  $(PROTOCOL_OPT)
+	$(ligo_compiler) compile parameter $^ -e increment '5'  $(PROTOCOL_OPT)
+	$(ligo_compiler) compile parameter $^ -e decrement '5'  $(PROTOCOL_OPT)
+	$(ligo_compiler) run dry-run $^ -e increment '5' '37'  $(PROTOCOL_OPT)
+	$(ligo_compiler) run dry-run $^ -e decrement '5' '37'  $(PROTOCOL_OPT)

@@ -1,15 +1,18 @@
 #import "storage.jsligo" "Storage"
 #import "parameter.jsligo" "Parameter"
+#import "algo.jsligo" "Algo"
 
 
 export type storage = Storage.Types.t;
-export type parameter = Parameter.Types.t;
+export type parameter = Algo.Types.t;
 export type return_ = [list<operation>, storage];
 
+@entry
+const changeAlgorithm = (p : parameter, store : storage) : return_ => {
+    return [list([]), Storage.Utils.change(p, store)]
+};
 
-const advisorMain = (ep: parameter, store: storage) : return_ => {
-    return [(list([]) as list<operation>), match (ep, {
-        ChangeAlgorithm: (p) => Storage.Utils.change(p, store),
-        ExecuteAlgorithm: (_p: unit) => Storage.Utils.executeAlgorithm(store) 
-    })];
+@entry
+const executeAlgorithm = (_p : unit, store : storage) : return_ => {
+    return [list([]), Storage.Utils.executeAlgorithm(store)]
 };
